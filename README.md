@@ -1,37 +1,46 @@
 # OpenGTD - Backend API (Spring Boot)
 
-API REST desenvolvida em **Java 21** com **Spring Boot**, **Spring Data JPA**, **Lombok** e banco em memória **H2** (pronta para futura migração para PostgreSQL).
+**OpenGTD** is a gamified task management RESTful API inspired by the *Getting Things Done (GTD)* methodology. Built with **Java 21**, **Spring Boot**, **Spring Data JPA**, **Lombok**, and an in-memory **H2** database (ready for future migration to PostgreSQL).
 
-## Estrutura de Pacotes
-
-- `controller`: Endpoints REST (`TarefaController`, `DashboardController`, `PerfilController`)
-- `service`: Regras de negócio, cálculo de Dashboard e regra de XP/Level (`TarefaService`, `PerfilService`)
-- `repository`: Interfaces de acesso a dados com Spring Data JPA (`TarefaRepository`, `PerfilRepository`)
-- `model`: Entidades e modelos de retorno (`Tarefa`, `TarefaResumo`, `Perfil`, `Dashboard`)
+It combines full task CRUD operations and quantitative dashboard analytics with an RPG-style progression system—rewarding completed tasks with XP, level-ups, and streak multipliers based on task difficulty.
 
 ---
 
-## Como Executar
+## Package Structure
 
-No terminal, dentro da pasta `opengtd`:
+- `controller`: REST endpoints (`TarefaController`, `DashboardController`, `PerfilController`)
+- `service`: Business logic, dashboard metrics calculation, and XP/Level progression rules (`TarefaService`, `PerfilService`)
+- `repository`: Data access interfaces powered by Spring Data JPA (`TarefaRepository`, `PerfilRepository`)
+- `model`: Entities and DTOs (`Tarefa`, `TarefaResumo`, `Perfil`, `Dashboard`)
+
+---
+
+## How to Run
+
+In your terminal, inside the `opengtd` folder:
 
 ```powershell
+# Windows (PowerShell / CMD)
 .\mvnw.cmd spring-boot:run
+
+# Linux / macOS
+./mvnw spring-boot:run
 ```
 
-- **URL Base da API:** `http://localhost:8080`
-- **Console do Banco H2:** `http://localhost:8080/h2-console`
+- **Base API URL:** `http://localhost:8080`
+- **Swagger UI / OpenAPI:** `http://localhost:8080/swagger-ui.html`
+- **H2 Database Console:** `http://localhost:8080/h2-console`
   - **JDBC URL:** `jdbc:h2:mem:opengtddb`
   - **User Name:** `sa`
-  - **Password:** *(deixar em branco)*
+  - **Password:** *(leave blank)*
 
 ---
 
-## Endpoints Disponíveis (Para testar no Postman - Aula 19)
+## Available Endpoints
 
-### 1. Tarefas (`/tarefas`)
+### 1. Tasks (`/tarefas`)
 
-- **`POST /tarefas`** — Cadastrar nova tarefa (Aula 15)
+- **`POST /tarefas`** — Create a new task
   ```json
   {
     "titulo": "Lavar a Louça",
@@ -42,8 +51,8 @@ No terminal, dentro da pasta `opengtd`:
     "tags": ["cotidiano", "higiene", "organização"]
   }
   ```
-- **`GET /tarefas`** — Listar todas as tarefas completas (Aula 16)
-- **`GET /tarefas/resumo`** — Listar tarefas no formato `ListaTarefas`:
+- **`GET /tarefas`** — List all tasks (full details)
+- **`GET /tarefas/resumo`** — List tasks in summary format (`TarefaResumo`):
   ```json
   [
     {
@@ -54,14 +63,14 @@ No terminal, dentro da pasta `opengtd`:
     }
   ]
   ```
-- **`GET /tarefas/{id}`** — Buscar tarefa por ID
-- **`PUT /tarefas/{id}`** — Atualizar tarefa (Aula 17)
-  *(Observação: alterar o `status` para `"concluido"` ou `"fracassado"` aciona automaticamente o cálculo de XP/Level e Streak no Perfil)*
-- **`DELETE /tarefas/{id}`** — Excluir tarefa (Aula 18)
+- **`GET /tarefas/{id}`** — Get a task by ID
+- **`PUT /tarefas/{id}`** — Update an existing task
+  *(Note: changing the `status` to `"concluido"` or `"fracassado"` automatically triggers XP, Level, and Streak calculations on the user's Profile)*
+- **`DELETE /tarefas/{id}`** — Delete a task
 
 ### 2. Dashboard (`/dashboard`)
 
-- **`GET /dashboard`** — Retorna o resumo quantitativo das tarefas:
+- **`GET /dashboard`** — Returns quantitative metrics across all tasks:
   ```json
   {
     "tarefasTotais": 105,
@@ -72,9 +81,9 @@ No terminal, dentro da pasta `opengtd`:
   }
   ```
 
-### 3. Perfil (`/perfil`)
+### 3. Profile & Gamification (`/perfil`)
 
-- **`GET /perfil`** — Retorna os dados do perfil e gamificação:
+- **`GET /perfil`** — Returns user profile and gamification stats:
   ```json
   {
     "nome": "Yuri",
@@ -84,4 +93,4 @@ No terminal, dentro da pasta `opengtd`:
     "xpProximoNivel": 300
   }
   ```
-- **`PUT /perfil`** — Atualiza manualmente os dados do perfil.
+- **`PUT /perfil`** — Manually update profile attributes.
